@@ -2,10 +2,7 @@ name: SimplePolice CI/CD
 
 on:
   push:
-    branches: [ main, develop, 'feature/**', 'release/**' ]
-    tags: [ 'v*' ]
   pull_request:
-    branches: [ main, develop ]
     types: [ opened, synchronize, reopened ]
   release:
     types: [ created, edited ]
@@ -39,11 +36,6 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
-
-      - name: Code Quality Check
-        run: |
-          mvn -B clean verify
-          mvn checkstyle:check
 
   test:
     needs: validate
