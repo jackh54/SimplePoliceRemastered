@@ -2,11 +2,24 @@ name: SimplePolice CI/CD
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, develop, 'feature/**', 'release/**' ]
+    tags: [ 'v*' ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, develop ]
+    types: [ opened, synchronize, reopened ]
   release:
-    types: [ created ]
+    types: [ created, edited ]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'development'
+        type: choice
+        options:
+        - development
+        - staging
+        - production
 
 jobs:
   validate:
