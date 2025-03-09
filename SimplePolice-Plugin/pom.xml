@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -9,43 +10,68 @@
 		<version>6.1.4</version>
 	</parent>
 
-	<groupId>com.voidcity.SimplePolice</groupId>
 	<artifactId>SimplePolice-Plugin</artifactId>
-	<version>6.1.4</version>
 	<packaging>jar</packaging>
+
+	<name>SimplePolice Plugin</name>
+	<description>Main plugin implementation for SimplePolice</description>
 
 	<dependencies>
 		<dependency>
-			<groupId>com.voidcity.SimplePolice-API</groupId>
+			<groupId>com.voidcity.SimplePolice-Project</groupId>
 			<artifactId>SimplePolice-API</artifactId>
 			<version>${project.version}</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<!-- Adventure platform for Paper -->
+		<dependency>
+			<groupId>net.kyori</groupId>
+			<artifactId>adventure-platform-bukkit</artifactId>
+			<version>4.3.2</version>
+		</dependency>
+
+		<!-- Cloud Command Framework -->
+		<dependency>
+			<groupId>cloud.commandframework</groupId>
+			<artifactId>cloud-paper</artifactId>
+			<version>1.8.4</version>
 		</dependency>
 
 		<dependency>
-			<groupId>com.sk89q.worldedit</groupId>
-			<artifactId>worldedit-bukkit</artifactId>
-			<version>7.2.6</version>
+			<groupId>cloud.commandframework</groupId>
+			<artifactId>cloud-brigadier</artifactId>
+			<version>1.8.4</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.mojang</groupId>
+			<artifactId>brigadier</artifactId>
+			<version>1.0.18</version>
 			<scope>provided</scope>
 		</dependency>
 
+		<!-- Configuration framework -->
+		<dependency>
+			<groupId>org.spongepowered</groupId>
+			<artifactId>configurate-yaml</artifactId>
+			<version>4.1.2</version>
+		</dependency>
+
+		<!-- WorldGuard for region protection -->
 		<dependency>
 			<groupId>com.sk89q.worldguard</groupId>
 			<artifactId>worldguard-bukkit</artifactId>
-			<version>7.0.5</version>
+			<version>7.0.9</version>
 			<scope>provided</scope>
 		</dependency>
 
+		<!-- WorldEdit for region selection -->
 		<dependency>
-			<groupId>me.zombie_striker</groupId>
-			<artifactId>QualityArmory</artifactId>
-			<version>2.0.7</version>
+			<groupId>com.sk89q.worldedit</groupId>
+			<artifactId>worldedit-bukkit</artifactId>
+			<version>7.2.18</version>
 			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
-			<version>2.10.1</version>
 		</dependency>
 	</dependencies>
 
@@ -55,27 +81,27 @@
 	</properties>
 		
 	<build>
-		<resources>
-			<resource>
-				<directory>src/main/resources</directory>
-				<filtering>true</filtering>
-			</resource>
-		</resources>
-		<sourceDirectory>src</sourceDirectory>
+		<defaultGoal>clean package</defaultGoal>
+		<sourceDirectory>src/main/java</sourceDirectory>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.10.1</version>
+				<version>3.12.1</version>
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+					<encoding>UTF-8</encoding>
+					<compilerArgs>
+						<arg>-sourcepath</arg>
+						<arg>${project.basedir}/src/main/java</arg>
+					</compilerArgs>
 				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
-				<version>3.4.1</version>
+				<version>3.5.2</version>
 				<executions>
 					<execution>
 						<phase>package</phase>
@@ -83,6 +109,7 @@
 							<goal>shade</goal>
 						</goals>
 						<configuration>
+							<createDependencyReducedPom>false</createDependencyReducedPom>
 							<filters>
 								<filter>
 									<artifact>*:*</artifact>
@@ -93,10 +120,93 @@
 									</excludes>
 								</filter>
 							</filters>
+							<relocations>
+								<relocation>
+									<pattern>net.kyori</pattern>
+									<shadedPattern>com.voidcity.simplepolice.libs.kyori</shadedPattern>
+								</relocation>
+								<relocation>
+									<pattern>cloud.commandframework</pattern>
+									<shadedPattern>com.voidcity.simplepolice.libs.cloud</shadedPattern>
+								</relocation>
+								<relocation>
+									<pattern>org.spongepowered.configurate</pattern>
+									<shadedPattern>com.voidcity.simplepolice.libs.configurate</shadedPattern>
+								</relocation>
+							</relocations>
 						</configuration>
 					</execution>
 				</executions>
 			</plugin>
+
+			<!-- Code Quality Plugins -->
+			<plugin>
+				<groupId>com.github.spotbugs</groupId>
+				<artifactId>spotbugs-maven-plugin</artifactId>
+				<version>4.8.3.1</version>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>verify</phase>
+						<goals>
+							<goal>spotbugs</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>3.3.1</version>
+				<configuration>
+					<configLocation>google_checks.xml</configLocation>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>verify</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- Code Quality Plugins -->
+			<plugin>
+				<groupId>com.github.spotbugs</groupId>
+				<artifactId>spotbugs-maven-plugin</artifactId>
+				<version>4.8.3.1</version>
+				<dependencies>
+					<dependency>
+						<groupId>com.github.spotbugs</groupId>
+						<artifactId>spotbugs</artifactId>
+						<version>4.8.3</version>
+					</dependency>
+				</dependencies>
+				<configuration>
+					<effort>Max</effort>
+					<threshold>Low</threshold>
+					<xmlOutput>true</xmlOutput>
+					<failOnError>false</failOnError>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>verify</phase>
+						<goals>
+							<goal>spotbugs</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
 	</build>
 </project>

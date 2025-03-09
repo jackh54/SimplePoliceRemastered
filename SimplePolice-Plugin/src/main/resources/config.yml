@@ -1,0 +1,86 @@
+# SimplePolice Configuration
+# Version: 6.1.4
+
+settings:
+  # Enable the jail system
+  enable-jail: true
+  
+  # Time in seconds that a player stays in jail (default: 300 seconds = 5 minutes)
+  jail-time: 300
+  
+  # Fine amount for arrested players
+  fine: 100.0
+  
+  # Location of the jail (will be set in-game)
+  jail-location:
+    world: ''
+    x: 0
+    y: 0
+    z: 0
+    yaw: 0
+    pitch: 0
+
+# Police officer settings
+police:
+  # Maximum number of police officers allowed
+  max-officers: 20
+  
+  # Whether police officers can damage each other
+  friendly-fire: false
+  
+  # Equipment given to police officers
+  equipment:
+    enabled: true
+    items:
+      - DIAMOND_SWORD
+      - SHIELD
+      - GOLDEN_APPLE:2
+
+# Arrest settings
+arrest:
+  # Range in blocks for arrest
+  range: 5
+  
+  # Time in seconds before a player can be arrested again
+  cooldown: 60
+  
+  # Whether to broadcast arrests server-wide
+  broadcast: true
+  
+  # Commands to run when a player is arrested
+  commands:
+    - "broadcast &c%player% has been arrested by %officer%!"
+    - "effect give %player% slowness 10 2"
+
+# Items that police officers can confiscate
+items:
+  banned:
+    - DIAMOND_SWORD
+    - NETHERITE_SWORD
+    - TNT
+    - END_CRYSTAL
+    - RESPAWN_ANCHOR
+
+# Messages configuration
+messages:
+  prefix: "&8[&bSimplePolice&8] &7"
+  no-permission: "&cYou don't have permission to do that!"
+  player-arrested: "&aYou have arrested %player%!"
+  player-jailed: "&cYou have been jailed for %time% seconds!"
+  fine-paid: "&cYou have been fined $%amount%!"
+  police-added: "&aAdded %player% as a police officer!"
+  police-removed: "&cRemoved %player% from police duty!"
+  jail-set: "&aJail location has been set!"
+
+# Database settings (MySQL)
+database:
+  enabled: false
+  host: localhost
+  port: 3306
+  database: simplepolice
+  username: root
+  password: password
+  table-prefix: sp_
+
+# Debug mode (enables additional logging)
+debug: false 

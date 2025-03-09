@@ -1,0 +1,7 @@
+{
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "yaml.schemas": {
+        "https://json.schemastore.org/bukkit-plugin.json": ["**/plugin.yml"]
+    },
+    "java.compile.nullAnalysis.mode": "automatic"
+}

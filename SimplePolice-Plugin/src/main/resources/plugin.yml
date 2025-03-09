@@ -1,46 +1,95 @@
 name: SimplePolice
-author: ramdon_person
-main: com.voidcitymc.plugins.SimplePolice.SimplePolice
-version: ${project.version}
-api-version: 1.13
-softdepend: [Vault, QualityArmory, WorldGuard, WorldEdit]
-website: https://plugins.voidcitymc.com
+version: '${project.version}'
+main: com.voidcity.simplepolice.SimplePolicePlugin
+api-version: '1.20'
+author: PandaScript
+description: A comprehensive police system for Minecraft servers
+website: https://github.com/PandaScript/SimplePoliceRemastered
+
+# Dependencies
+depend: [Vault]
+softdepend: [WorldGuard, WorldEdit]
+
+permissions:
+  simplepolice.admin:
+    description: Gives access to all SimplePolice commands
+    default: op
+    children:
+      simplepolice.police.add: true
+      simplepolice.police.remove: true
+      simplepolice.jail.set: true
+      simplepolice.jail.delete: true
+      simplepolice.reload: true
+  
+  simplepolice.police:
+    description: Basic police officer permissions
+    default: false
+    children:
+      simplepolice.arrest: true
+      simplepolice.jail: true
+      simplepolice.fine: true
+      simplepolice.confiscate: true
+  
+  simplepolice.police.add:
+    description: Allows adding police officers
+    default: op
+  
+  simplepolice.police.remove:
+    description: Allows removing police officers
+    default: op
+  
+  simplepolice.jail.set:
+    description: Allows setting the jail location
+    default: op
+  
+  simplepolice.jail.delete:
+    description: Allows deleting the jail location
+    default: op
+  
+  simplepolice.arrest:
+    description: Allows arresting players
+    default: false
+  
+  simplepolice.jail:
+    description: Allows jailing players
+    default: false
+  
+  simplepolice.fine:
+    description: Allows fining players
+    default: false
+  
+  simplepolice.confiscate:
+    description: Allows confiscating banned items
+    default: false
+  
+  simplepolice.reload:
+    description: Allows reloading the plugin configuration
+    default: op
+
 commands:
   police:
-    description: main police command
-    usage: /police
-  911:
-    description: call the cops
-    usage: /911
-permissions:
-  SimplePolice.cmd.admin.help:
-    default: op
-    description: allows you to see the admin help pages
-  SimplePolice.cmd.admin.reload:
-    default: op
-  SimplePolice.cmd.admin.frisk.add:
-    default: op
-  SimplePolice.cmd.admin.frisk.remove:
-    default: op
-  SimplePolice.cmd.admin.frisk.list:
-    default: op
-  SimplePolice.cmd.admin.police.add:
-    default: op
-  SimplePolice.cmd.admin.police.remove:
-    default: op
-  SimplePolice.cmd.admin.police.list:
-    default: op
-  SimplePolice.cmd.admin.jails.add:
-    default: op
-  SimplePolice.cmd.admin.jails.remove:
-    default: op
-  SimplePolice.cmd.admin.jails.list:
-    default: op
-  SimplePolice.cmd.jail:
-    default: op
-  SimplePolice.cmd.tp:
-    default: op
-  SimplePolice.cmd.release:
-    default: op
-  SimplePolice.cmd.chat:
-    default: op
+    description: Main command for SimplePolice
+    usage: /police <add|remove|list> [player]
+    aliases: [sp]
+    permission: simplepolice.police
+  
+  arrest:
+    description: Arrest a player
+    usage: /arrest <player>
+    permission: simplepolice.arrest
+  
+  jail:
+    description: Manage the jail system
+    usage: /jail <set|delete|tp>
+    permission: simplepolice.jail
+  
+  fine:
+    description: Fine a player
+    usage: /fine <player> <amount>
+    permission: simplepolice.fine
+  
+  spreload:
+    description: Reload the plugin configuration
+    usage: /spreload
+    permission: simplepolice.reload
+    aliases: [policereload]
