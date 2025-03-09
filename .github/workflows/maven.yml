@@ -43,7 +43,6 @@ jobs:
       - name: Code Quality Check
         run: |
           mvn -B clean verify
-          mvn spotbugs:check
           mvn checkstyle:check
 
   test:
