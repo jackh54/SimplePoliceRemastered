@@ -1,4 +1,5 @@
 # SimplePolice Remastered
+[![SimplePolice CI/CD](https://github.com/jackh54/SimplePoliceRemastered/actions/workflows/maven.yml/badge.svg)](https://github.com/jackh54/SimplePoliceRemastered/actions/workflows/maven.yml)
 
 A comprehensive police system for Minecraft servers, remastered for version 1.21 with modern features and optimizations.
 
